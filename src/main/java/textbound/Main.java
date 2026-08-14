@@ -5,11 +5,21 @@ public class Main {
     public static void main(String[] args) {
 
         Room village = new Room(
-            "Town of Beginnings",
-            "The blackness which floods your psyche gradually splits open, blue flooding yours eyes as numerous crowds of adventurers move about the village square. The smell of fresh bread and the sound of a blacksmith's hammer fill the air, as you take in your surroundings."
+            "Village Square",
+            "You stand in the center of a quiet village."
         );
 
-        System.out.println(village.getName());
-        System.out.println(village.getDescription());
+        Room forest = new Room(
+            "Dark Forest",
+            "Tall trees surround you on every side."
+        );
+
+        village.addExit("north", forest);
+
+        Room destination = village.getExit("north");
+
+        System.out.println("Current room: " + village.getName());
+        System.out.println("Going north...");
+        System.out.println("You arrive at: " + destination.getName());
     }
 }
