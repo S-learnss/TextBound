@@ -15,11 +15,22 @@ public class Main {
         );
 
         village.addExit("north", forest);
+        forest.addExit("south", village);
 
-        Room destination = village.getExit("north");
+        Player player = new Player("Adventurer", village);
 
-        System.out.println("Current room: " + village.getName());
-        System.out.println("Going north...");
-        System.out.println("You arrive at: " + destination.getName());
+        System.out.println("Player: " + player.getName());
+        System.out.println("Current room: "
+                + player.getCurrentRoom().getName());
+
+        player.move("north");
+
+        System.out.println("After moving north:");
+        System.out.println("Current room: "
+                + player.getCurrentRoom().getName());
+
+        boolean moved = player.move("west");
+
+        System.out.println("Could move west? " + moved);
     }
 }
