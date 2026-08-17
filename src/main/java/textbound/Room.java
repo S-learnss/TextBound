@@ -28,6 +28,10 @@ public class Room {
     }
 
     public Room getExit(String direction) {
-    return exits.get(direction);
-}
+        return exits.get(direction);
+    }
+
+    public String getExitDescription() {
+        return String.join(", ", exits.keySet());
+    }
 }

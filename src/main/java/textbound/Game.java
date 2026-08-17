@@ -17,25 +17,48 @@ public class Game {
         createWorld();
     }
 
-    private void createWorld() {
+  private void createWorld() {
 
-        Room village = new Room(
-                "Village Square",
-                "You stand in the center of a quiet village."
-        );
+    Room village = new Room(
+            "Village Square",
+            "You stand in the center of a quiet village."
+    );
 
-        Room forest = new Room(
-                "Dark Forest",
-                "Tall trees surround you on every side."
-        );
+    Room crossroads = new Room(
+            "Crossroads",
+            "Four paths meet here beneath an old wooden sign."
+    );
 
-        village.addExit("north", forest);
-        forest.addExit("south", village);
+    Room forest = new Room(
+            "Dark Forest",
+            "Tall trees surround you on every side."
+    );
 
-        startingRoom = village;
+    Room shop = new Room(
+            "Old Shop",
+            "Dusty shelves line the walls of this abandoned shop."
+    );
 
-        player = new Player("Adventurer", startingRoom);
-    }
+    Room cave = new Room(
+            "Abandoned Cave",
+            "A cold, dark cave stretches deep into the earth."
+    );
+
+    village.addExit("north", crossroads);
+
+    crossroads.addExit("south", village);
+    crossroads.addExit("north", forest);
+    crossroads.addExit("east", shop);
+    crossroads.addExit("west", cave);
+
+    forest.addExit("south", crossroads);
+    shop.addExit("west", crossroads);
+    cave.addExit("east", crossroads);
+
+    startingRoom = village;
+
+    player = new Player("Adventurer", startingRoom);
+}
 
     public void start() {
 
@@ -75,12 +98,19 @@ public class Game {
             break;
 
         case "look":
-            System.out.println(player.getCurrentRoom().getName());
-            System.out.println(
-                    player.getCurrentRoom().getDescription()
-            );
-            break;
 
+    Room currentRoom = player.getCurrentRoom();
+
+    System.out.println();
+    System.out.println(currentRoom.getName());
+    System.out.println();
+    System.out.println(currentRoom.getDescription());
+    System.out.println();
+    System.out.println("Exits: " + currentRoom.getExitDescription());
+    System.out.println();
+
+    break;
+    
         case "go":
 
             if (parts.length < 2) {
