@@ -1,13 +1,18 @@
 package textbound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
 
     private String name;
     private Room currentRoom;
+    private List<Item> inventory;
 
     public Player(String name, Room startingRoom) {
         this.name = name;
         this.currentRoom = startingRoom;
+        this.inventory = new ArrayList<>();
     }
 
     public String getName() {
@@ -27,5 +32,29 @@ public class Player {
         }
 
         return false;
+    }
+
+    public void addItem(Item item) {
+        inventory.add(item);
+    }
+
+    public Item getItem(String name) {
+
+        for (Item item : inventory) {
+
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean removeItem(Item item) {
+        return inventory.remove(item);
+    }
+
+    public List<Item> getInventory() {
+        return inventory;
     }
 }

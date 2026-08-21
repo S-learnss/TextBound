@@ -1,6 +1,8 @@
 package textbound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Room {
@@ -8,11 +10,13 @@ public class Room {
     private String name;
     private String description;
     private Map<String, Room> exits;
+    private List<Item> items;
 
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
         this.exits = new HashMap<>();
+        this.items = new ArrayList<>();
     }
 
     public String getName() {
@@ -33,5 +37,29 @@ public class Room {
 
     public String getExitDescription() {
         return String.join(", ", exits.keySet());
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public boolean removeItem(Item item) {
+        return items.remove(item);
+    }
+
+    public Item getItem(String name) {
+
+        for (Item item : items) {
+
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 }
