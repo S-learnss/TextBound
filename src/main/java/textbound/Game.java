@@ -283,11 +283,19 @@ public class Game {
                 System.out.println("- take <item>");
                 System.out.println("- drop <item>");
                 System.out.println("- inventory");
+                System.out.println("- save");
                 System.out.println("- help");
                 System.out.println("- quit");
                 System.out.println();
 
                 break;
+
+                case "save":
+
+    SaveManager.save(player);
+
+    break;
+
 
             case "quit":
 
