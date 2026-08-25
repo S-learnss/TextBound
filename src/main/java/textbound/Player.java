@@ -23,6 +23,10 @@ public class Player {
         return currentRoom;
     }
 
+    public void setCurrentRoom(Room room) {
+    currentRoom = room;
+}
+
     public boolean move(String direction) {
         Room destination = currentRoom.getExit(direction);
 
@@ -52,6 +56,10 @@ public class Player {
 
     public boolean removeItem(Item item) {
         return inventory.remove(item);
+    }
+
+    public void clearInventory() {
+    inventory.clear();
     }
 
     public List<Item> getInventory() {

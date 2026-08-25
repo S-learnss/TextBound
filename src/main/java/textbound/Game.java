@@ -1,15 +1,22 @@
 package textbound;
 
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Game {
 
     private Player player;
     private boolean running;
     private Room startingRoom;
+    private List<Room> rooms;
 
     public Game() {
+
+        rooms = new ArrayList<>();
+
         createWorld();
+
         running = true;
     }
 
@@ -41,6 +48,13 @@ public class Game {
                 "A cold, dark cave stretches deep into the earth."
         );
 
+        // Add all rooms to the room list
+        rooms.add(village);
+        rooms.add(crossroads);
+        rooms.add(forest);
+        rooms.add(shop);
+        rooms.add(cave);
+
         // Connect rooms
         village.addExit("north", crossroads);
 
@@ -50,7 +64,9 @@ public class Game {
         crossroads.addExit("west", cave);
 
         forest.addExit("south", crossroads);
+
         shop.addExit("west", crossroads);
+
         cave.addExit("east", crossroads);
 
         // Create items
@@ -82,6 +98,32 @@ public class Game {
                 "Adventurer",
                 startingRoom
         );
+    }
+
+    public Room findRoom(String roomName) {
+
+        for (Room room : rooms) {
+
+            if (room.getName().equalsIgnoreCase(roomName)) {
+                return room;
+            }
+        }
+
+        return null;
+    }
+
+    public Item findItem(String itemName) {
+
+        for (Room room : rooms) {
+
+            Item item = room.getItem(itemName);
+
+            if (item != null) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     public void start() {
@@ -124,7 +166,9 @@ public class Game {
         String argument = "";
 
         if (parts.length > 1) {
+
             argument = input.substring(command.length()).trim();
+
             argument = argument.replaceAll("\\s+", " ");
         }
 
@@ -141,20 +185,28 @@ public class Game {
                 System.out.println();
 
                 if (currentRoom.getItems().isEmpty()) {
+
                     System.out.println("Items: none");
+
                 } else {
 
                     System.out.println("Items:");
 
                     for (Item item : currentRoom.getItems()) {
-                        System.out.println("- " + item.getName());
+
+                        System.out.println(
+                                "- " + item.getName()
+                        );
                     }
                 }
 
                 System.out.println();
+
                 System.out.println(
-                        "Exits: " + currentRoom.getExitDescription()
+                        "Exits: " +
+                        currentRoom.getExitDescription()
                 );
+
                 System.out.println();
 
                 break;
@@ -162,7 +214,9 @@ public class Game {
             case "go":
 
                 if (argument.isEmpty()) {
+
                     System.out.println("Go where?");
+
                     break;
                 }
 
@@ -190,18 +244,23 @@ public class Game {
             case "take":
 
                 if (argument.isEmpty()) {
+
                     System.out.println("Take what?");
+
                     break;
                 }
 
                 Room roomForTake = player.getCurrentRoom();
 
-                Item itemToTake = roomForTake.getItem(argument);
+                Item itemToTake =
+                        roomForTake.getItem(argument);
 
                 if (itemToTake == null) {
 
                     System.out.println(
-                            "There is no " + argument + " here."
+                            "There is no " +
+                            argument +
+                            " here."
                     );
 
                     break;
@@ -212,9 +271,9 @@ public class Game {
                 player.addItem(itemToTake);
 
                 System.out.println(
-                        "You picked up the "
-                                + itemToTake.getName()
-                                + "."
+                        "You picked up the " +
+                        itemToTake.getName() +
+                        "."
                 );
 
                 break;
@@ -222,18 +281,24 @@ public class Game {
             case "drop":
 
                 if (argument.isEmpty()) {
+
                     System.out.println("Drop what?");
+
                     break;
                 }
 
-                Room roomForDrop = player.getCurrentRoom();
+                Room roomForDrop =
+                        player.getCurrentRoom();
 
-                Item itemToDrop = player.getItem(argument);
+                Item itemToDrop =
+                        player.getItem(argument);
 
                 if (itemToDrop == null) {
 
                     System.out.println(
-                            "You don't have " + argument + "."
+                            "You don't have " +
+                            argument +
+                            "."
                     );
 
                     break;
@@ -244,9 +309,9 @@ public class Game {
                 roomForDrop.addItem(itemToDrop);
 
                 System.out.println(
-                        "You dropped the "
-                                + itemToDrop.getName()
-                                + "."
+                        "You dropped the " +
+                        itemToDrop.getName() +
+                        "."
                 );
 
                 break;
@@ -262,7 +327,8 @@ public class Game {
 
                 } else {
 
-                    for (Item item : player.getInventory()) {
+                    for (Item item :
+                            player.getInventory()) {
 
                         System.out.println(
                                 "- " + item.getName()
@@ -271,6 +337,18 @@ public class Game {
                 }
 
                 System.out.println();
+
+                break;
+
+            case "save":
+
+                SaveManager.save(player);
+
+                break;
+
+            case "load":
+
+                SaveManager.load(this, player);
 
                 break;
 
@@ -284,18 +362,12 @@ public class Game {
                 System.out.println("- drop <item>");
                 System.out.println("- inventory");
                 System.out.println("- save");
+                System.out.println("- load");
                 System.out.println("- help");
                 System.out.println("- quit");
                 System.out.println();
 
                 break;
-
-                case "save":
-
-    SaveManager.save(player);
-
-    break;
-
 
             case "quit":
 
@@ -310,7 +382,8 @@ public class Game {
             default:
 
                 System.out.println(
-                        "Unknown command. Type 'help' for a list of commands."
+                        "Unknown command. " +
+                        "Type 'help' for a list of commands."
                 );
 
                 break;
