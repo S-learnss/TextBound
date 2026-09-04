@@ -11,12 +11,14 @@ public class Room {
     private String description;
     private Map<String, Room> exits;
     private List<Item> items;
+    private Map<String, String> lockedExits;
 
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
         this.exits = new HashMap<>();
         this.items = new ArrayList<>();
+        this.lockedExits = new HashMap<>();
     }
 
     public String getName() {
@@ -31,8 +33,25 @@ public class Room {
         exits.put(direction, destination);
     }
 
+    public void addLockedExit(
+            String direction,
+            Room destination,
+            String requiredItem) {
+
+        exits.put(direction, destination);
+        lockedExits.put(direction, requiredItem);
+    }
+
     public Room getExit(String direction) {
         return exits.get(direction);
+    }
+
+    public boolean isExitLocked(String direction) {
+        return lockedExits.containsKey(direction);
+    }
+
+    public String getRequiredItem(String direction) {
+        return lockedExits.get(direction);
     }
 
     public String getExitDescription() {

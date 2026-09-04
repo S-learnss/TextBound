@@ -48,12 +48,18 @@ public class Game {
                 "A cold, dark cave stretches deep into the earth."
         );
 
+        Room lockedArea = new Room(
+                "Sealed Chamber",
+                "A mysterious chamber lies beyond the ancient iron door."
+        );
+
         // Add all rooms to the room list
         rooms.add(village);
         rooms.add(crossroads);
         rooms.add(forest);
         rooms.add(shop);
         rooms.add(cave);
+        rooms.add(lockedArea);
 
         // Connect rooms
         village.addExit("north", crossroads);
@@ -68,6 +74,13 @@ public class Game {
         shop.addExit("west", crossroads);
 
         cave.addExit("east", crossroads);
+
+        // The chamber is locked and requires the Iron Key
+        cave.addLockedExit(
+                "north",
+                lockedArea,
+                "Iron Key"
+        );
 
         // Create items
         Item coin = new Item(
@@ -220,24 +233,70 @@ public class Game {
                     break;
                 }
 
-                boolean moved = player.move(argument);
+                Room current = player.getCurrentRoom();
 
-                if (moved) {
+                // Check whether the requested exit exists
+                Room destination = current.getExit(argument);
 
-                    System.out.println(
-                            "You move " + argument + "."
-                    );
-
-                    System.out.println(
-                            player.getCurrentRoom().getName()
-                    );
-
-                } else {
+                if (destination == null) {
 
                     System.out.println(
                             "You cannot go " + argument + "."
                     );
+
+                    break;
                 }
+
+                // Check whether the exit is locked
+                if (current.isExitLocked(argument)) {
+
+                    String requiredItem =
+                            current.getRequiredItem(argument);
+
+                    Item keyItem =
+                            player.getItem(requiredItem);
+
+                    if (keyItem == null) {
+
+                        System.out.println();
+                        System.out.println(
+                                "The way is locked."
+                        );
+
+                        System.out.println(
+                                "You need the " +
+                                requiredItem +
+                                "."
+                        );
+
+                        System.out.println();
+
+                        break;
+                    }
+
+                    System.out.println();
+                    System.out.println(
+                            "You use the " +
+                            requiredItem +
+                            "."
+                    );
+
+                    System.out.println(
+                            "The lock clicks open."
+                    );
+
+                    System.out.println();
+                }
+
+                player.setCurrentRoom(destination);
+
+                System.out.println(
+                        "You move " + argument + "."
+                );
+
+                System.out.println(
+                        player.getCurrentRoom().getName()
+                );
 
                 break;
 
@@ -390,3 +449,5 @@ public class Game {
         }
     }
 }
+
+
