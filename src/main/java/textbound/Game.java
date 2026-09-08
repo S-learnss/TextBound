@@ -10,10 +10,12 @@ public class Game {
     private boolean running;
     private Room startingRoom;
     private List<Room> rooms;
+    private List<NPC> npcs;
 
     public Game() {
 
         rooms = new ArrayList<>();
+        npcs = new ArrayList<>();
 
         createWorld();
 
@@ -75,14 +77,14 @@ public class Game {
 
         cave.addExit("east", crossroads);
 
-        // The chamber is locked and requires the Iron Key
+        
         cave.addLockedExit(
                 "north",
                 lockedArea,
                 "Iron Key"
         );
 
-        // Create items
+
         Item coin = new Item(
                 "Old Coin",
                 "An old silver coin covered in strange markings."
@@ -98,15 +100,26 @@ public class Game {
                 "A cold iron key with a strange symbol engraved on it."
         );
 
-        // Place items in rooms
+        
         village.addItem(coin);
         forest.addItem(torch);
         shop.addItem(key);
 
-        // Set starting room
+        NPC elder = new NPC(
+        "Village Elder",
+        "An elderly man leaning against a worn wooden staff.",
+        "Long ago, an ancient secret was sealed beneath this village. "
+        + "The strange coin you carry may be the key to uncovering it. "
+        + "If you seek the truth, search the forest and the old shop. "
+        + "You will need both light and a key to reach what lies below.",
+        village
+);
+
+        npcs.add(elder);
+
+       
         startingRoom = village;
 
-        // Create player
         player = new Player(
                 "Adventurer",
                 startingRoom
@@ -133,6 +146,20 @@ public class Game {
 
             if (item != null) {
                 return item;
+            }
+        }
+
+        return null;
+    }
+
+    public NPC findNPC(String npcName) {
+
+        for (NPC npc : npcs) {
+
+            if (npc.getName().toLowerCase()
+                    .contains(npcName.toLowerCase())) {
+
+                return npc;
             }
         }
 
@@ -215,6 +242,37 @@ public class Game {
 
                 System.out.println();
 
+                if (npcs.isEmpty()) {
+
+                    System.out.println("People: none");
+
+                } else {
+
+                    boolean npcFound = false;
+
+                    System.out.println("People:");
+
+                    for (NPC npc : npcs) {
+
+                        if (npc.getRoom() == currentRoom) {
+
+                            System.out.println(
+                                    "- " + npc.getName()
+                            );
+
+                            npcFound = true;
+                        }
+                    }
+
+                    if (!npcFound) {
+
+                        System.out.println("none");
+                    }
+                }
+
+                System.out.println();
+
+
                 System.out.println(
                         "Exits: " +
                         currentRoom.getExitDescription()
@@ -235,7 +293,7 @@ public class Game {
 
                 Room current = player.getCurrentRoom();
 
-                // Check whether the requested exit exists
+                
                 Room destination = current.getExit(argument);
 
                 if (destination == null) {
@@ -247,7 +305,7 @@ public class Game {
                     break;
                 }
 
-                // The cave requires a Torch to explore
+                
                 if (current.getName().equalsIgnoreCase("Abandoned Cave")
                         && argument.equalsIgnoreCase("north")) {
 
@@ -281,7 +339,6 @@ public class Game {
                     System.out.println();
                 }
 
-                // Check whether the exit is locked
                 if (current.isExitLocked(argument)) {
 
                     String requiredItem =
@@ -332,8 +389,7 @@ public class Game {
                         player.getCurrentRoom().getName()
                 );
 
-                // Check whether the player has completed the game
-                checkWinCondition();
+        
 
                 break;
 
@@ -436,6 +492,52 @@ public class Game {
 
                 break;
 
+            case "talk":
+
+                if (argument.isEmpty()) {
+
+                    System.out.println("Talk to whom?");
+
+                    break;
+                }
+
+                NPC npc = findNPC(argument);
+
+                if (npc == null) {
+
+                    System.out.println(
+                            "You cannot find anyone named " +
+                            argument +
+                            "."
+                    );
+
+                    break;
+                }
+
+                if (npc.getRoom() != player.getCurrentRoom()) {
+
+                    System.out.println(
+                            npc.getName() +
+                            " is not here."
+                    );
+
+                    break;
+                }
+
+                System.out.println();
+                System.out.println(
+                        npc.getName() + ":"
+                );
+
+                System.out.println(
+                        "\"" + npc.getDialogue() + "\""
+                );
+
+                System.out.println();
+
+                break;  
+   
+
             case "save":
 
                 SaveManager.save(player);
@@ -457,6 +559,7 @@ public class Game {
                 System.out.println("- take <item>");
                 System.out.println("- drop <item>");
                 System.out.println("- inventory");
+                System.out.println("- talk <npc>");
                 System.out.println("- save");
                 System.out.println("- load");
                 System.out.println("- help");
@@ -533,4 +636,6 @@ public class Game {
         }
     }
 }
+
+
 

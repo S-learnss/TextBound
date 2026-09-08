@@ -70,7 +70,7 @@ public class SaveManager {
                 }
             }
 
-            // Find the saved room
+           
             Room savedRoom = game.findRoom(roomName);
 
             if (savedRoom != null) {
@@ -86,10 +86,10 @@ public class SaveManager {
                 return;
             }
 
-            // Clear the player's current inventory
+            
             player.clearInventory();
 
-            // Restore saved inventory
+           
             if (!inventoryData.isEmpty()) {
 
                 String[] itemNames =
