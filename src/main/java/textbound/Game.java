@@ -247,6 +247,40 @@ public class Game {
                     break;
                 }
 
+                // The cave requires a Torch to explore
+                if (current.getName().equalsIgnoreCase("Abandoned Cave")
+                        && argument.equalsIgnoreCase("north")) {
+
+                    Item torch = player.getItem("Torch");
+
+                    if (torch == null) {
+
+                        System.out.println();
+                        System.out.println(
+                                "The cave is too dark to continue."
+                        );
+
+                        System.out.println(
+                                "You need a Torch to see your way forward."
+                        );
+
+                        System.out.println();
+
+                        break;
+                    }
+
+                    System.out.println();
+                    System.out.println(
+                            "You raise the Torch and illuminate the passage."
+                    );
+
+                    System.out.println(
+                            "You can now see the way forward."
+                    );
+
+                    System.out.println();
+                }
+
                 // Check whether the exit is locked
                 if (current.isExitLocked(argument)) {
 
@@ -297,6 +331,9 @@ public class Game {
                 System.out.println(
                         player.getCurrentRoom().getName()
                 );
+
+                // Check whether the player has completed the game
+                checkWinCondition();
 
                 break;
 
@@ -448,6 +485,52 @@ public class Game {
                 break;
         }
     }
-}
 
+    private void checkWinCondition() {
+
+        if (player.getCurrentRoom().getName()
+                .equalsIgnoreCase("Sealed Chamber")) {
+
+            Item coin = player.getItem("Old Coin");
+
+            if (coin != null) {
+
+                System.out.println();
+                System.out.println("================================");
+                System.out.println("          VICTORY!");
+                System.out.println("================================");
+                System.out.println();
+                System.out.println(
+                        "You place the Old Coin upon the"
+                );
+                System.out.println(
+                        "ancient stone pedestal."
+                );
+                System.out.println();
+                System.out.println(
+                        "The markings upon the coin begin"
+                );
+                System.out.println(
+                        "to glow."
+                );
+                System.out.println();
+                System.out.println(
+                        "The chamber awakens."
+                );
+                System.out.println();
+                System.out.println(
+                        "You have uncovered the mystery"
+                );
+                System.out.println(
+                        "hidden beneath the village."
+                );
+                System.out.println();
+                System.out.println("You have completed Textbound!");
+                System.out.println();
+
+                running = false;
+            }
+        }
+    }
+}
 
